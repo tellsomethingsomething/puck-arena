@@ -1,7 +1,8 @@
 import { Router, Request, Response } from 'express';
+import type { Router as RouterType } from 'express';
 import { generateToken, authenticateToken, AuthRequest, verifyToken } from '../middleware/auth.js';
 
-const router = Router();
+const router: RouterType = Router();
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@puckarena.com';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'changeme123';

@@ -1,11 +1,12 @@
 import { Router, Request, Response } from 'express';
+import type { Router as RouterType } from 'express';
 import { eq } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 import { db, schema } from '../db/index.js';
 import { DEFAULT_PUCK } from '@puck-arena/shared';
 import type { CreatePuckRequest, UpdatePuckRequest } from '@puck-arena/shared';
 
-const router = Router();
+const router: RouterType = Router();
 
 // GET /api/pucks - List all pucks (public)
 router.get('/', async (_req: Request, res: Response) => {

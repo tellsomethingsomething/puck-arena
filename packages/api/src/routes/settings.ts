@@ -1,9 +1,10 @@
 import { Router, Request, Response } from 'express';
+import type { Router as RouterType } from 'express';
 import { eq } from 'drizzle-orm';
 import { db, schema } from '../db/index.js';
 import { SETTINGS_KEYS, DEFAULT_PHYSICS, type PhysicsSettings } from '@puck-arena/shared';
 
-const router = Router();
+const router: RouterType = Router();
 
 // GET /api/settings - Get all settings (public)
 router.get('/', async (_req: Request, res: Response) => {
