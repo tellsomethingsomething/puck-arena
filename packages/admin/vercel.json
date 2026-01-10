@@ -1,0 +1,9 @@
+{
+  "buildCommand": "cd ../.. && pnpm build:shared && cd packages/admin && pnpm build",
+  "outputDirectory": "dist",
+  "installCommand": "cd ../.. && pnpm install",
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

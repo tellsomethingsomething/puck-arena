@@ -1,0 +1,9 @@
+{
+  "buildCommand": "pnpm build:shared && pnpm --filter @puck-arena/admin build",
+  "outputDirectory": "packages/admin/dist",
+  "installCommand": "pnpm install",
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
