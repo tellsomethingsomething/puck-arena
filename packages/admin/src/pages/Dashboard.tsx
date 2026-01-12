@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { getPucks, getSettings } from '../lib/api';
-import type { Puck, PhysicsSettings } from '@puck-arena/shared';
 import { io } from 'socket.io-client';
+import type { Puck, PhysicsSettings } from '@puck-arena/shared';
+import { getPucks, getSettings } from '../lib/api';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
