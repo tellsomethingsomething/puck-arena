@@ -111,6 +111,11 @@ export function Canvas({ puckConfigs, puckStates, settings: _settings, onTap }: 
       const x = clientX - rect.left;
       const y = clientY - rect.top;
 
+      // Haptic feedback for mobile devices
+      if (navigator.vibrate) {
+        navigator.vibrate(12); // Quick 12ms buzz
+      }
+
       // Show local tap effect immediately
       rendererRef.current.showTapEffect(x, y);
 
