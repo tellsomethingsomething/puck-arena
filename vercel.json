@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm build:shared && pnpm --filter @puck-arena/arena build",
+  "buildCommand": "pnpm --filter @puck-arena/shared build && pnpm --filter @puck-arena/arena build",
   "outputDirectory": "packages/arena/dist",
   "installCommand": "pnpm install",
   "framework": "vite"
