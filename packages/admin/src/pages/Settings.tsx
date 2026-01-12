@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
+import { DEFAULT_PHYSICS, type PhysicsSettings } from '@puck-arena/shared';
 import { getSettings, updateSettings } from '../lib/api';
-import { DEFAULT_PHYSICS } from '@puck-arena/shared';
-import type { PhysicsSettings } from '@puck-arena/shared';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 
 export function Settings() {

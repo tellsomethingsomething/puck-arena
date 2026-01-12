@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
+import type { Puck, CreatePuckRequest, UpdatePuckRequest } from '@puck-arena/shared';
 import { getPucks, createPuck, updatePuck, deletePuck, bulkCreatePucks } from '../lib/api';
 import { PuckForm } from '../components/PuckForm';
-import type { Puck, CreatePuckRequest, UpdatePuckRequest } from '@puck-arena/shared';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 
 export function Pucks() {
