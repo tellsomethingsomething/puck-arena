@@ -2,10 +2,9 @@ import { Router, Request, Response } from 'express';
 import type { Router as RouterType } from 'express';
 import { eq } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
+import { DEFAULT_PUCK, type CreatePuckRequest, type UpdatePuckRequest } from '@puck-arena/shared';
 import { db, schema } from '../db/index.js';
 import { findPuckById } from '../db/utils.js';
-import { DEFAULT_PUCK } from '@puck-arena/shared';
-import type { CreatePuckRequest, UpdatePuckRequest } from '@puck-arena/shared';
 
 const router: RouterType = Router();
 

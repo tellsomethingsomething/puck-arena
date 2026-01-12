@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
-import type {
-  FullSync,
-  StateUpdate,
-  ConfigUpdate,
-  UserCountUpdate,
-  PuckConfig,
-  PuckState,
-  PhysicsSettings,
+import {
+  DEFAULT_PHYSICS,
+  type FullSync,
+  type StateUpdate,
+  type ConfigUpdate,
+  type UserCountUpdate,
+  type PuckConfig,
+  type PuckState,
+  type PhysicsSettings,
 } from '@puck-arena/shared';
-import { DEFAULT_PHYSICS } from '@puck-arena/shared';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 

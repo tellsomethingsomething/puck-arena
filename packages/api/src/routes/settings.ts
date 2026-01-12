@@ -1,9 +1,9 @@
 import { Router, Request, Response } from 'express';
 import type { Router as RouterType } from 'express';
 import { eq } from 'drizzle-orm';
+import { SETTINGS_KEYS, type PhysicsSettings } from '@puck-arena/shared';
 import { db, schema } from '../db/index.js';
 import { convertRecordsToSettings, findSettingByKey } from '../db/utils.js';
-import { SETTINGS_KEYS, type PhysicsSettings } from '@puck-arena/shared';
 
 const router: RouterType = Router();
 
