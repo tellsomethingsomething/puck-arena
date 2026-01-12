@@ -3,7 +3,7 @@ import { Server, Socket } from 'socket.io';
 import { db, schema } from '../db/index.js';
 import { convertRecordsToSettings, getActivePuckConfigs, puckRecordToConfig } from '../db/utils.js';
 import type { ClientMessage, PuckConfig, PhysicsSettings, FullSync, StateUpdate, ConfigUpdate } from '@puck-arena/shared';
-import { SYNC, SETTINGS_KEYS } from '@puck-arena/shared';
+import { SYNC } from '@puck-arena/shared';
 import {
   PhysicsState,
   initializePhysicsState,
