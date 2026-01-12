@@ -3,6 +3,7 @@ import type { Router as RouterType } from 'express';
 import { eq } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 import { db, schema } from '../db/index.js';
+import { findPuckById } from '../db/utils.js';
 import { DEFAULT_PUCK } from '@puck-arena/shared';
 import type { CreatePuckRequest, UpdatePuckRequest } from '@puck-arena/shared';
 
@@ -76,13 +77,9 @@ router.put('/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
 
     // Check if puck exists
-    const existing = await db
-      .select()
-      .from(schema.pucks)
-      .where(eq(schema.pucks.id, id))
-      .limit(1);
+    const existing = await findPuckById(id);
 
-    if (existing.length === 0) {
+    if (!existing) {
       res.status(404).json({ error: 'Not Found', message: 'Puck not found' });
       return;
     }
@@ -115,13 +112,9 @@ router.delete('/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
 
     // Check if puck exists
-    const existing = await db
-      .select()
-      .from(schema.pucks)
-      .where(eq(schema.pucks.id, id))
-      .limit(1);
+    const existing = await findPuckById(id);
 
-    if (existing.length === 0) {
+    if (!existing) {
       res.status(404).json({ error: 'Not Found', message: 'Puck not found' });
       return;
     }

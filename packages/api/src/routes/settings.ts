@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import type { Router as RouterType } from 'express';
 import { eq } from 'drizzle-orm';
 import { db, schema } from '../db/index.js';
-import { convertRecordsToSettings } from '../db/utils.js';
+import { convertRecordsToSettings, findSettingByKey } from '../db/utils.js';
 import { SETTINGS_KEYS, type PhysicsSettings } from '@puck-arena/shared';
 
 const router: RouterType = Router();
@@ -38,13 +38,9 @@ router.put('/:key', async (req: Request, res: Response) => {
     }
 
     // Update or insert setting
-    const existing = await db
-      .select()
-      .from(schema.settings)
-      .where(eq(schema.settings.key, key))
-      .limit(1);
+    const existing = await findSettingByKey(key);
 
-    if (existing.length === 0) {
+    if (!existing) {
       res.status(404).json({ error: 'Not Found', message: 'Setting not found' });
       return;
     }
