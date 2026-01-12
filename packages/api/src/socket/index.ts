@@ -1,7 +1,7 @@
 import { Server as HttpServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { db, schema } from '../db/index.js';
-import { convertRecordsToSettings } from '../db/utils.js';
+import { convertRecordsToSettings, getActivePuckConfigs, puckRecordToConfig } from '../db/utils.js';
 import type { ClientMessage, PuckConfig, PhysicsSettings, FullSync, StateUpdate, ConfigUpdate } from '@puck-arena/shared';
 import { SYNC, SETTINGS_KEYS } from '@puck-arena/shared';
 import {
@@ -54,16 +54,7 @@ export function initializeSocket(httpServer: HttpServer) {
 async function initializePhysicsFromDb() {
   // Load pucks from database
   const puckRecords = await db.select().from(schema.pucks);
-  const puckConfigs: PuckConfig[] = puckRecords
-    .filter((p) => p.active)
-    .map((p) => ({
-      id: p.id,
-      color: p.color,
-      logoUrl: p.logoUrl,
-      size: p.size,
-      mass: p.mass,
-      label: p.label,
-    }));
+  const puckConfigs = getActivePuckConfigs(puckRecords);
 
   // Load settings from database
   const settingsRecords = await db.select().from(schema.settings);
@@ -131,16 +122,7 @@ function broadcastUserCount() {
 async function sendFullSync(socket: Socket) {
   // Reload puck configs from database
   const puckRecords = await db.select().from(schema.pucks);
-  const puckConfigs: PuckConfig[] = puckRecords
-    .filter((p) => p.active)
-    .map((p) => ({
-      id: p.id,
-      color: p.color,
-      logoUrl: p.logoUrl,
-      size: p.size,
-      mass: p.mass,
-      label: p.label,
-    }));
+  const puckConfigs = getActivePuckConfigs(puckRecords);
 
   const sync: FullSync = {
     type: 'fullSync',
@@ -199,7 +181,8 @@ function startBroadcastLoop() {
 // Admin functions to update state
 export async function refreshPucksFromDb() {
   const puckRecords = await db.select().from(schema.pucks);
-  const activeIds = new Set(puckRecords.filter((p) => p.active).map((p) => p.id));
+  const activePucks = puckRecords.filter((p) => p.active);
+  const activeIds = new Set(activePucks.map((p) => p.id));
 
   // Remove pucks no longer in db or inactive
   physicsState.bodies.forEach((_, id) => {
@@ -209,24 +192,13 @@ export async function refreshPucksFromDb() {
   });
 
   // Add new pucks
-  const puckConfigs: PuckConfig[] = [];
-  puckRecords
-    .filter((p) => p.active)
-    .forEach((p) => {
-      const config: PuckConfig = {
-        id: p.id,
-        color: p.color,
-        logoUrl: p.logoUrl,
-        size: p.size,
-        mass: p.mass,
-        label: p.label,
-      };
-      puckConfigs.push(config);
-
-      if (!physicsState.bodies.has(p.id)) {
-        addPuck(physicsState, config);
-      }
-    });
+  const puckConfigs = activePucks.map((p) => {
+    const config = puckRecordToConfig(p);
+    if (!physicsState.bodies.has(p.id)) {
+      addPuck(physicsState, config);
+    }
+    return config;
+  });
 
   // Broadcast config update
   const configUpdate: ConfigUpdate = {
