@@ -125,11 +125,6 @@ export function useSocket(onTapEffect?: (effect: TapEffectEvent) => void) {
     }
   }, []);
 
-  // Get interpolated states
-  const getInterpolatedStates = useCallback((): Map<string, PuckState> => {
-    return puckStates;
-  }, [puckStates]);
-
   return {
     connected,
     userCount,
@@ -137,6 +132,5 @@ export function useSocket(onTapEffect?: (effect: TapEffectEvent) => void) {
     puckStates,
     settings,
     sendTap,
-    getInterpolatedStates,
   };
 }
