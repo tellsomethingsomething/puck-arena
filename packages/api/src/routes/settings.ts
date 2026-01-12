@@ -6,48 +6,52 @@ import { SETTINGS_KEYS, DEFAULT_PHYSICS, type PhysicsSettings } from '@puck-aren
 
 const router: RouterType = Router();
 
+// Helper function to convert database records to PhysicsSettings object
+function convertRecordsToSettings(settingsRecords: schema.SettingRecord[]): PhysicsSettings {
+  const settings: PhysicsSettings = {
+    gravityX: DEFAULT_PHYSICS.gravityX,
+    gravityY: DEFAULT_PHYSICS.gravityY,
+    friction: DEFAULT_PHYSICS.friction,
+    restitution: DEFAULT_PHYSICS.restitution,
+    airFriction: DEFAULT_PHYSICS.airFriction,
+    maxPucks: DEFAULT_PHYSICS.maxPucks,
+    archGravity: DEFAULT_PHYSICS.archGravity,
+  };
+
+  for (const record of settingsRecords) {
+    switch (record.key) {
+      case SETTINGS_KEYS.GRAVITY_X:
+        settings.gravityX = parseFloat(record.value);
+        break;
+      case SETTINGS_KEYS.GRAVITY_Y:
+        settings.gravityY = parseFloat(record.value);
+        break;
+      case SETTINGS_KEYS.FRICTION:
+        settings.friction = parseFloat(record.value);
+        break;
+      case SETTINGS_KEYS.RESTITUTION:
+        settings.restitution = parseFloat(record.value);
+        break;
+      case SETTINGS_KEYS.AIR_FRICTION:
+        settings.airFriction = parseFloat(record.value);
+        break;
+      case SETTINGS_KEYS.MAX_PUCKS:
+        settings.maxPucks = parseInt(record.value, 10);
+        break;
+      case SETTINGS_KEYS.ARCH_GRAVITY:
+        settings.archGravity = parseFloat(record.value);
+        break;
+    }
+  }
+
+  return settings;
+}
+
 // GET /api/settings - Get all settings (public)
 router.get('/', async (_req: Request, res: Response) => {
   try {
     const settingsRecords = await db.select().from(schema.settings);
-
-    // Convert to PhysicsSettings object
-    const settings: PhysicsSettings = {
-      gravityX: DEFAULT_PHYSICS.gravityX,
-      gravityY: DEFAULT_PHYSICS.gravityY,
-      friction: DEFAULT_PHYSICS.friction,
-      restitution: DEFAULT_PHYSICS.restitution,
-      airFriction: DEFAULT_PHYSICS.airFriction,
-      maxPucks: DEFAULT_PHYSICS.maxPucks,
-      archGravity: DEFAULT_PHYSICS.archGravity,
-    };
-
-    for (const record of settingsRecords) {
-      switch (record.key) {
-        case SETTINGS_KEYS.GRAVITY_X:
-          settings.gravityX = parseFloat(record.value);
-          break;
-        case SETTINGS_KEYS.GRAVITY_Y:
-          settings.gravityY = parseFloat(record.value);
-          break;
-        case SETTINGS_KEYS.FRICTION:
-          settings.friction = parseFloat(record.value);
-          break;
-        case SETTINGS_KEYS.RESTITUTION:
-          settings.restitution = parseFloat(record.value);
-          break;
-        case SETTINGS_KEYS.AIR_FRICTION:
-          settings.airFriction = parseFloat(record.value);
-          break;
-        case SETTINGS_KEYS.MAX_PUCKS:
-          settings.maxPucks = parseInt(record.value, 10);
-          break;
-        case SETTINGS_KEYS.ARCH_GRAVITY:
-          settings.archGravity = parseFloat(record.value);
-          break;
-      }
-    }
-
+    const settings = convertRecordsToSettings(settingsRecords);
     res.json(settings);
   } catch (error) {
     console.error('Error fetching settings:', error);
@@ -136,43 +140,7 @@ router.put('/', async (req: Request, res: Response) => {
 
     // Return updated settings
     const settingsRecords = await db.select().from(schema.settings);
-
-    const settings: PhysicsSettings = {
-      gravityX: DEFAULT_PHYSICS.gravityX,
-      gravityY: DEFAULT_PHYSICS.gravityY,
-      friction: DEFAULT_PHYSICS.friction,
-      restitution: DEFAULT_PHYSICS.restitution,
-      airFriction: DEFAULT_PHYSICS.airFriction,
-      maxPucks: DEFAULT_PHYSICS.maxPucks,
-      archGravity: DEFAULT_PHYSICS.archGravity,
-    };
-
-    for (const record of settingsRecords) {
-      switch (record.key) {
-        case SETTINGS_KEYS.GRAVITY_X:
-          settings.gravityX = parseFloat(record.value);
-          break;
-        case SETTINGS_KEYS.GRAVITY_Y:
-          settings.gravityY = parseFloat(record.value);
-          break;
-        case SETTINGS_KEYS.FRICTION:
-          settings.friction = parseFloat(record.value);
-          break;
-        case SETTINGS_KEYS.RESTITUTION:
-          settings.restitution = parseFloat(record.value);
-          break;
-        case SETTINGS_KEYS.AIR_FRICTION:
-          settings.airFriction = parseFloat(record.value);
-          break;
-        case SETTINGS_KEYS.MAX_PUCKS:
-          settings.maxPucks = parseInt(record.value, 10);
-          break;
-        case SETTINGS_KEYS.ARCH_GRAVITY:
-          settings.archGravity = parseFloat(record.value);
-          break;
-      }
-    }
-
+    const settings = convertRecordsToSettings(settingsRecords);
     res.json(settings);
   } catch (error) {
     console.error('Error updating settings:', error);
