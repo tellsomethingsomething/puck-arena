@@ -1,8 +1,9 @@
 import { Server as HttpServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { db, schema } from '../db/index.js';
+import { convertRecordsToSettings } from '../db/utils.js';
 import type { ClientMessage, PuckConfig, PhysicsSettings, FullSync, StateUpdate, ConfigUpdate } from '@puck-arena/shared';
-import { SYNC, DEFAULT_PHYSICS, SETTINGS_KEYS } from '@puck-arena/shared';
+import { SYNC, SETTINGS_KEYS } from '@puck-arena/shared';
 import {
   PhysicsState,
   initializePhysicsState,
@@ -66,30 +67,7 @@ async function initializePhysicsFromDb() {
 
   // Load settings from database
   const settingsRecords = await db.select().from(schema.settings);
-  const settings: PhysicsSettings = { ...DEFAULT_PHYSICS };
-
-  for (const record of settingsRecords) {
-    switch (record.key) {
-      case SETTINGS_KEYS.GRAVITY_X:
-        settings.gravityX = parseFloat(record.value);
-        break;
-      case SETTINGS_KEYS.GRAVITY_Y:
-        settings.gravityY = parseFloat(record.value);
-        break;
-      case SETTINGS_KEYS.FRICTION:
-        settings.friction = parseFloat(record.value);
-        break;
-      case SETTINGS_KEYS.RESTITUTION:
-        settings.restitution = parseFloat(record.value);
-        break;
-      case SETTINGS_KEYS.AIR_FRICTION:
-        settings.airFriction = parseFloat(record.value);
-        break;
-      case SETTINGS_KEYS.MAX_PUCKS:
-        settings.maxPucks = parseInt(record.value, 10);
-        break;
-    }
-  }
+  const settings = convertRecordsToSettings(settingsRecords);
 
   physicsState = initializePhysicsState(puckConfigs, settings);
   console.log(`Physics initialized with ${puckConfigs.length} pucks`);
@@ -260,30 +238,7 @@ export async function refreshPucksFromDb() {
 
 export async function refreshSettingsFromDb() {
   const settingsRecords = await db.select().from(schema.settings);
-  const newSettings: Partial<PhysicsSettings> = {};
-
-  for (const record of settingsRecords) {
-    switch (record.key) {
-      case SETTINGS_KEYS.GRAVITY_X:
-        newSettings.gravityX = parseFloat(record.value);
-        break;
-      case SETTINGS_KEYS.GRAVITY_Y:
-        newSettings.gravityY = parseFloat(record.value);
-        break;
-      case SETTINGS_KEYS.FRICTION:
-        newSettings.friction = parseFloat(record.value);
-        break;
-      case SETTINGS_KEYS.RESTITUTION:
-        newSettings.restitution = parseFloat(record.value);
-        break;
-      case SETTINGS_KEYS.AIR_FRICTION:
-        newSettings.airFriction = parseFloat(record.value);
-        break;
-      case SETTINGS_KEYS.MAX_PUCKS:
-        newSettings.maxPucks = parseInt(record.value, 10);
-        break;
-    }
-  }
+  const newSettings = convertRecordsToSettings(settingsRecords);
 
   updateSettings(physicsState, newSettings);
 
