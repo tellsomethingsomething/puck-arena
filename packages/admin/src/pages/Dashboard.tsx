@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getPucks, getSettings } from '../lib/api';
 import type { Puck, PhysicsSettings } from '@puck-arena/shared';
 import { io } from 'socket.io-client';
+import { LoadingSpinner } from '../components/LoadingSpinner';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -38,11 +39,7 @@ export function Dashboard() {
   }, []);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-slate-400">Loading...</div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   const activePucks = pucks.filter((p) => p.active).length;

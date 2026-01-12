@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getSettings, updateSettings } from '../lib/api';
 import { DEFAULT_PHYSICS } from '@puck-arena/shared';
 import type { PhysicsSettings } from '@puck-arena/shared';
+import { LoadingSpinner } from '../components/LoadingSpinner';
 
 export function Settings() {
   const [settings, setSettings] = useState<PhysicsSettings>(DEFAULT_PHYSICS);
@@ -38,11 +39,7 @@ export function Settings() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-slate-400">Loading...</div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (

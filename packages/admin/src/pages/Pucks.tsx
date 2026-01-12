@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { getPucks, createPuck, updatePuck, deletePuck, bulkCreatePucks } from '../lib/api';
 import { PuckForm } from '../components/PuckForm';
 import type { Puck, CreatePuckRequest, UpdatePuckRequest } from '@puck-arena/shared';
+import { LoadingSpinner } from '../components/LoadingSpinner';
 
 export function Pucks() {
   const [pucks, setPucks] = useState<Puck[]>([]);
@@ -175,11 +176,7 @@ export function Pucks() {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-slate-400">Loading...</div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
